@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:globalchat/screens/sigup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,8 +15,18 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text("Login"),
       ),
-      body: Center(
-        child: Text("Login screen"),
+      body: Column(
+        children: [
+          Text('Dont have a account'),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return SignupScreen();
+              }));
+            },
+            child: Text('Signup'),
+          )
+        ],
       ),
     );
   }
