@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126798382097",
+    "project_id": "globalchat-c1761",
+    "storage_bucket": "globalchat-c1761.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126798382097:android:7304b9dbeb057056021db0",
+        "android_client_info": {
+          "package_name": "com.redwire.globalchat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMp9I7VLSfomQ4cvTlXPXEKrGVUJlXDyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
