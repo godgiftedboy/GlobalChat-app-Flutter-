@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:globalchat/controlllers/signup_controller.dart';
+import 'package:globalchat/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -26,6 +27,13 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              SizedBox(height: 50),
+              SizedBox(
+                height: 60,
+                child: Image.asset(
+                  "assets/images/logo.png",
+                ),
+              ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: email,
@@ -56,16 +64,44 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    if (userForm.currentState!.validate()) {
-                      SignupController.createAccount(
-                        context: context,
-                        email: email.text,
-                        password: password.text,
-                      );
-                    }
-                  },
-                  child: Text("Create account"))
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(100, 50),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                ),
+                onPressed: () {
+                  if (userForm.currentState!.validate()) {
+                    SignupController.createAccount(
+                      context: context,
+                      email: email.text,
+                      password: password.text,
+                    );
+                  }
+                },
+                child: Text("Create account"),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Already have an account?  '),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(context,
+                          MaterialPageRoute(builder: (context) {
+                        return LoginScreen();
+                      }), (route) {
+                        return false;
+                      });
+                    },
+                    child: Text(
+                      'Login',
+                      style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),

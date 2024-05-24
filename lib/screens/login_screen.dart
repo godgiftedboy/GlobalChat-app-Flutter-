@@ -27,6 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              SizedBox(height: 50),
+              SizedBox(
+                height: 60,
+                child: Image.asset(
+                  "assets/images/logo.png",
+                ),
+              ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: email,
@@ -57,25 +64,42 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () {
-                    if (userForm.currentState!.validate()) {
-                      LoginController.login(
-                        context: context,
-                        email: email.text,
-                        password: password.text,
-                      );
-                    }
-                  },
-                  child: Text("Login")),
-              Text('Dont have a account'),
-              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(100, 50),
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
+                ),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SignupScreen();
-                  }));
+                  if (userForm.currentState!.validate()) {
+                    LoginController.login(
+                      context: context,
+                      email: email.text,
+                      password: password.text,
+                    );
+                  }
                 },
-                child: Text('Signup'),
-              )
+                child: Text("Login"),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Dont have a account?  '),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return SignupScreen();
+                      }));
+                    },
+                    child: Text(
+                      'Signup',
+                      style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
             ],
           ),
         ),
