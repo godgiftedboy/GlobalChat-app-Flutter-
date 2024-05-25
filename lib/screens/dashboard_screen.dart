@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:globalchat/screens/profile_screen.dart';
 import 'package:globalchat/screens/splash_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -15,24 +16,47 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashboard"),
+        title: Text("GlobalChat"),
+      ),
+      drawer: Drawer(
+        child: Container(
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              ListTile(
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return ProfileScreen();
+                    }),
+                  );
+                },
+                leading: Icon(Icons.person),
+                title: Text("Profile"),
+              ),
+              ListTile(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                    return SplashScreen();
+                  }), (route) {
+                    return false;
+                  });
+                },
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+              ),
+            ],
+          ),
+        ),
       ),
       body: Column(
         children: [
           Center(
             child: Text(user?.email ?? "".toString()),
           ),
-          ElevatedButton(
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushAndRemoveUntil(context,
-                    MaterialPageRoute(builder: (context) {
-                  return SplashScreen();
-                }), (route) {
-                  return false;
-                });
-              },
-              child: Text("Logout"))
         ],
       ),
     );

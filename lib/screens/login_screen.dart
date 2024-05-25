@@ -44,6 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (value == null || value.isEmpty) {
                     return "Email is required";
                   }
+                  return null;
                 },
               ),
               SizedBox(height: 20),
@@ -60,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (value == null || value.isEmpty) {
                     return "Password is required";
                   }
+                  return null;
                 },
               ),
               SizedBox(height: 20),
