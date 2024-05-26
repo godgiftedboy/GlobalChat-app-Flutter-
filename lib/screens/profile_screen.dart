@@ -24,12 +24,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text("Profile"),
       ),
-      body: Column(
-        children: [
-          Text(userProvider.userName),
-          Text(userProvider.userEmail),
-          Text(userProvider.userId),
-        ],
+      body: Container(
+        width: double.infinity,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              child: Text(userProvider.userName[0]),
+              radius: 50,
+            ),
+            SizedBox(height: 8),
+            Text(
+              userProvider.userName,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(userProvider.userEmail),
+            SizedBox(height: 15),
+            ElevatedButton(onPressed: () {}, child: Text("Edit Profile")),
+          ],
+        ),
       ),
     );
   }
