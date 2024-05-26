@@ -28,12 +28,13 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
     Map<String, dynamic> message = {
       "text": messageText.text,
       "sender_name": Provider.of<UserProvider>(context, listen: false).userName,
+      "sender_id": Provider.of<UserProvider>(context, listen: false).userId,
       "chatroom_id": widget.chatroomId,
       "timestamp": FieldValue.serverTimestamp()
     };
+    messageText.text = "";
     try {
       await db.collection("messages").add(message);
-      messageText.text = "";
     } catch (e) {
       print(e);
     }
@@ -62,23 +63,17 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                     return Text("Some Error has occured");
                   }
                   var allMessages = snapshot.data?.docs ?? [];
+                  if (allMessages.length < 1) {
+                    return Center(
+                      child: Text("No Messages here"),
+                    );
+                  }
                   return ListView.builder(
                       itemCount: allMessages.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              allMessages[index]["text"],
-                            ),
-                            Text(
-                              allMessages[index]["sender_name"],
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                          ],
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: singleChatItem(allMessages, index),
                         );
                       });
                 }),
@@ -108,6 +103,42 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Column singleChatItem(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> allMessages,
+      int index) {
+    bool isSender = allMessages[index]["sender_id"] ==
+        Provider.of<UserProvider>(context, listen: false).userId;
+    return Column(
+      crossAxisAlignment:
+          isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Text(
+            allMessages[index]["sender_name"],
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+              color: isSender ? Colors.grey[300] : Colors.blueGrey[900],
+              borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              allMessages[index]["text"],
+              style: TextStyle(
+                color: isSender ? Colors.black : Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
