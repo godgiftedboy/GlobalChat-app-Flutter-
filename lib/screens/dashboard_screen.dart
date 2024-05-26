@@ -42,12 +42,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
     var userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
             title: Text("GlobalChat"),
             leading: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: CircleAvatar(
-                child: Text(userProvider.userName[0]),
+              child: InkWell(
+                onTap: () {
+                  scaffoldKey.currentState!.openDrawer();
+                },
+                child: CircleAvatar(
+                  child: Text(userProvider.userName[0]),
+                ),
               ),
             )),
         drawer: Drawer(
