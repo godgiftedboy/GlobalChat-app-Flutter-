@@ -18,6 +18,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   };
 
   TextEditingController nameText = TextEditingController();
+
+  var editProfileForm = GlobalKey<FormState>();
   @override
   void initState() {
     nameText.text = Provider.of<UserProvider>(context, listen: false).userName;
@@ -32,7 +34,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         title: Text("Profile"),
         actions: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if(editProfileForm.currentState!.validate()){
+                //updating on the database
+              }
+            },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(Icons.check),
@@ -45,12 +51,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
+            key: editProfileForm,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TextField(
+                TextFormField(
                   controller: nameText,
                   decoration: InputDecoration(label: Text("Nane")),
+                  validator: ,
                 ),
               ],
             ),
