@@ -35,7 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: [
           InkWell(
             onTap: () {
-              if(editProfileForm.currentState!.validate()){
+              if (editProfileForm.currentState!.validate()) {
                 //updating on the database
               }
             },
@@ -56,9 +56,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: nameText,
                   decoration: InputDecoration(label: Text("Nane")),
-                  validator: ,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Name cannot be empty";
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
