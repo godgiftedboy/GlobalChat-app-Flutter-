@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:globalchat/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,12 +11,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  Map<String, dynamic>? userData = {
-    // "name": name,
-    // "country": country,
-    // "email": email,
-    // "id": userId.toString(),
-  };
+  var db = FirebaseFirestore.instance;
 
   TextEditingController nameText = TextEditingController();
 
@@ -26,9 +22,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.initState();
   }
 
+  void updateUserName() {
+    Map<String, dynamic>? userDataToUpdate = {
+      "name": nameText.text,
+    };
+    db
+        .collection("users")
+        .doc(Provider.of<UserProvider>(context, listen: false).userId)
+        .update(userDataToUpdate);
+    Provider.of<UserProvider>(context, listen: false).getUserDetails();
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context);
+    // var userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Profile"),
@@ -37,6 +45,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onTap: () {
               if (editProfileForm.currentState!.validate()) {
                 //updating on the database
+                updateUserName();
               }
             },
             child: Padding(
