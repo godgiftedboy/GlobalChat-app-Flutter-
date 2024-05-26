@@ -48,14 +48,32 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
       body: Column(
         children: [
           Expanded(
+            //Stream builder reflects the changes from DB in real time
             child: StreamBuilder(
-                stream: db.collection("messages").snapshots(),
+                stream: db
+                    .collection("messages")
+                    .orderBy("timestamp", descending: false)
+                    .snapshots(),
                 builder: (context, snapshot) {
                   var allMessages = snapshot.data?.docs ?? [];
                   return ListView.builder(
                       itemCount: allMessages.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return Text(allMessages[index]["text"]);
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              allMessages[index]["text"],
+                            ),
+                            Text(
+                              allMessages[index]["sender_name"],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                          ],
+                        );
                       });
                 }),
           ),
