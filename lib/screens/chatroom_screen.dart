@@ -53,6 +53,7 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                 stream: db
                     .collection("messages")
                     .where("chatroom_id", isEqualTo: widget.chatroomId)
+                    .limit(5)
                     .orderBy("timestamp", descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
