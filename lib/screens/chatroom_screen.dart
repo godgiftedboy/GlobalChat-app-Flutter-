@@ -55,6 +55,10 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                     .orderBy("timestamp", descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return Text("Some Error has occured");
+                  }
                   var allMessages = snapshot.data?.docs ?? [];
                   return ListView.builder(
                       itemCount: allMessages.length,
