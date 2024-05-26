@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:globalchat/providers/user_provider.dart';
+import 'package:globalchat/screens/chatroom_screen.dart';
 import 'package:globalchat/screens/profile_screen.dart';
 import 'package:globalchat/screens/splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,10 +23,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<Map<String, dynamic>> chatroomList = [];
+  List<String> chatroomIds = [];
+
   void getChatrooms() {
     db.collection("chatroom").get().then((value) {
       for (var singleChatroomData in value.docs) {
         chatroomList.add(singleChatroomData.data());
+        chatroomIds.add(singleChatroomData.id.toString());
         setState(() {});
       }
     });
@@ -110,6 +114,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
             itemCount: chatroomList.length,
             itemBuilder: (context, index) {
               return ListTile(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) {
+                      return ChatroomScreen(
+                        chatroomName:
+                            chatroomList[index]['chatroom_name'] ?? '',
+                        chatroomId: chatroomIds[index],
+                      );
+                    }),
+                  );
+                },
                 leading: CircleAvatar(
                   backgroundColor: Colors.blueGrey[900],
                   child: Text(
