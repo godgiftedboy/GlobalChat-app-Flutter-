@@ -40,6 +40,40 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
     }
   }
 
+  bool loadMoreMessages = false;
+  int limit = 8;
+
+  ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    // Log the current scroll position
+    print('Scroll Position: ${_scrollController.position.pixels}');
+    print('Max Scroll Position: ${_scrollController.position.maxScrollExtent}');
+    loadMoreMessages = false;
+    setState(() {});
+
+    // Check if scrolled outside the screen
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      loadMoreMessages = true;
+      setState(() {});
+      print('Scrolled beyond the screen!');
+      // Perform your desired action here
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,13 +82,29 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
       ),
       body: Column(
         children: [
+          loadMoreMessages
+              ? Container(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                  color: Colors.grey[200],
+                  child: InkWell(
+                    onTap: () {
+                      print("before: $limit");
+                      limit = limit + 9;
+                      print("After: $limit");
+
+                      setState(() {});
+                    },
+                    child: Text("Tap here to load more messages"),
+                  ),
+                )
+              : SizedBox.shrink(),
           Expanded(
             //Stream builder reflects the changes from DB in real time
             child: StreamBuilder(
                 stream: db
                     .collection("messages")
                     .where("chatroom_id", isEqualTo: widget.chatroomId)
-                    .limit(8)
+                    .limit(limit)
                     .orderBy("timestamp", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -69,9 +119,13 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                     );
                   }
                   return ListView.builder(
+                      controller: _scrollController,
                       reverse: true,
                       itemCount: allMessages.length,
                       itemBuilder: (BuildContext context, int index) {
+                        if (limit > allMessages.length) {
+                          loadMoreMessages = false;
+                        }
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: singleChatItem(allMessages, index),
