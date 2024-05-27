@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:globalchat/fcm_services.dart';
+import 'package:globalchat/notification_services.dart';
 import 'package:globalchat/secrets/firebase_options.dart';
 import 'package:globalchat/providers/user_provider.dart';
 import 'package:globalchat/screens/splash_screen.dart';
@@ -11,6 +13,13 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  //Show local notification
+  await NotificationService.initialize();
+
+  //Initilize FireBase Notification
+
+  FcmServices.initializeFirebase();
   FirebaseMessaging.instance
       .getToken()
       .then((value) => {debugPrint("getToken: $value")});
