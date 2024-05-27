@@ -24,6 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List<Map<String, dynamic>> chatroomList = [];
   List<String> chatroomIds = [];
+  TextEditingController chatroomName = TextEditingController();
 
   void getChatrooms() {
     db.collection("chatroom").get().then((value) {
@@ -33,6 +34,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
         setState(() {});
       }
     });
+  }
+
+  void addChatroom() async {
+    if (chatroomName.text.isEmpty) {
+      return;
+    }
+    Map<String, dynamic> chatroom = {
+      "chatroom_name": chatroomName.text,
+      "createdBy": Provider.of<UserProvider>(context, listen: false).userName,
+      "creatorUserId": Provider.of<UserProvider>(context, listen: false).userId,
+      "timestamp": FieldValue.serverTimestamp(),
+      "desc":
+          "Chatroom created by ${Provider.of<UserProvider>(context, listen: false).userName}"
+    };
+    chatroomName.text = "";
+    try {
+      await db.collection("chatroom").add(chatroom);
+      chatroomList = [];
+      getChatrooms();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -110,32 +133,61 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ),
         ),
-        body: ListView.builder(
-            itemCount: chatroomList.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) {
-                      return ChatroomScreen(
-                        chatroomName:
-                            chatroomList[index]['chatroom_name'] ?? '',
-                        chatroomId: chatroomIds[index],
-                      );
-                    }),
-                  );
-                },
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blueGrey[900],
-                  child: Text(
-                    "${index + 1}",
-                    style: TextStyle(color: Colors.white),
-                  ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  itemCount: chatroomList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) {
+                            return ChatroomScreen(
+                              chatroomName:
+                                  chatroomList[index]['chatroom_name'] ?? '',
+                              chatroomId: chatroomIds[index],
+                            );
+                          }),
+                        );
+                      },
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blueGrey[900],
+                        child: Text(
+                          "${index + 1}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      title: Text(chatroomList[index]['chatroom_name'] ?? ''),
+                      subtitle: Text(chatroomList[index]['desc'] ?? ''),
+                    );
+                  }),
+            ),
+            Container(
+              color: Colors.grey[200],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        child: TextField(
+                      controller: chatroomName,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Enter Chatroom name to Add"),
+                    )),
+                    InkWell(
+                      onTap: () {
+                        addChatroom();
+                      },
+                      child: CircleAvatar(child: Icon(Icons.add)),
+                    ),
+                  ],
                 ),
-                title: Text(chatroomList[index]['chatroom_name'] ?? ''),
-                subtitle: Text(chatroomList[index]['desc'] ?? ''),
-              );
-            }));
+              ),
+            ),
+          ],
+        ));
   }
 }

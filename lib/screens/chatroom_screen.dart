@@ -54,8 +54,8 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                 stream: db
                     .collection("messages")
                     .where("chatroom_id", isEqualTo: widget.chatroomId)
-                    .limit(5)
-                    .orderBy("timestamp", descending: false)
+                    .limit(8)
+                    .orderBy("timestamp", descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -69,6 +69,7 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                     );
                   }
                   return ListView.builder(
+                      reverse: true,
                       itemCount: allMessages.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
@@ -100,7 +101,7 @@ class _ChatroomScreenState extends State<ChatroomScreen> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
