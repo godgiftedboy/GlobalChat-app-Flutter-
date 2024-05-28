@@ -14,7 +14,7 @@ class LoginController {
         password: password,
       );
       SnackBar sucessSnackbar = SnackBar(
-        content: Text("Logged in Successfully"),
+        content: Text("Logged in Successfully..."),
       );
       ScaffoldMessenger.of(context).showSnackBar(sucessSnackbar);
       Navigator.pushAndRemoveUntil(context,
